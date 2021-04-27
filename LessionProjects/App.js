@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { View, StyleSheet, Button, TouchableHighlight, Text } from "react-native";
+import { View, StyleSheet, Button, TouchableHighlight, Text, ImageComponent } from "react-native";
+import IconComponent from './src/components/IconComponent';
 
 
 const _onPressButton = () => {
@@ -10,43 +11,9 @@ const App = () => {
   return (
     <>
       <View style={[styles.container, styles.verticalContainer]}>
-        <View style={[styles.box, styles.yellowBox]}>
-          <View style={styles.button}>
-            <TouchableHighlight style={{ justifyContent: 'center',flex:1, backgroundColor:'purple'}}
-              onPress={_onPressButton} underlayColor="red">
-              <Text style={styles.buttonText}>Touch Me!</Text>
-            </TouchableHighlight>
-            <TouchableHighlight style={{ justifyContent: 'center',flex:1, backgroundColor:'gray' }}
-              onPress={_onPressButton} underlayColor="red">
-              <Text style={styles.buttonText}>Touch Me!</Text>
-            </TouchableHighlight>
-          </View>
-        </View>
-        <View style={[styles.box, styles.yellowBox]}>
-        </View>
+        <IconComponent></IconComponent>
       </View>
 
-      <View style={[styles.container, styles.horizontalContainer]}>
-        <View style={styles.container}>
-          <View style={[styles.box, styles.blueBox]}>
-            <View style={styles.button}>
-              <TouchableHighlight style={{  justifyContent: 'center',flex:1 }}
-                onPress={_onPressButton} underlayColor="red">
-                <Text style={styles.buttonText}>Touch Me!</Text>
-              </TouchableHighlight>
-              
-            </View>
-          </View>
-          <View style={[styles.box, styles.blueBox]}>
-          </View>
-        </View>
-        <View style={styles.container}>
-          <View style={[styles.box, styles.blueBox]}>
-          </View>
-          <View style={[styles.box, styles.blueBox]}>
-          </View>
-        </View>
-      </View>
     </>
   );
 };
