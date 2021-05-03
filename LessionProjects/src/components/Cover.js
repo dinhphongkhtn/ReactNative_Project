@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
-import { Text, View, StyleSheet, Image } from 'react-native'
+import { Text, View, StyleSheet, Image, TouchableOpacity } from 'react-native'
+import AppStyles, { AppColors } from "../Assets/Styles";
 
 export default class Cover extends Component {
-    constructor(props) {
-        super(props);
-       
-    }
+
     render() {
 
         return (
@@ -17,10 +15,10 @@ export default class Cover extends Component {
                     <Image
                         source={{ uri: this.props.data.picture.medium }}
                         style={styles.imgAvarta}></Image>
-                </View>
-                <View style={styles.viewInfor}>
-                    <Text style={styles.primaryText}>{this.props.data.name.first}</Text>
-                    <Text style={styles.secondText}>{this.props.data.name.last}</Text>
+                    <View style={styles.viewInfor}>
+                        <Text style={AppStyles.primaryText}>{`${this.props.data.name.first} ${this.props.data.name.last}`}</Text>
+                        {/* <Image style={AppStyles.button} source={{ uri: 'https://static.xx.fbcdn.net/rsrc.php/v3/yW/r/OR6SzrfoMFg.png' }}></Image> */}
+                    </View>
                 </View>
             </View>
         )
@@ -31,6 +29,7 @@ const styles = StyleSheet.create({
 
     container: {
         flex: 1,
+
     },
     viewImage: {
         flex: 2,
@@ -38,15 +37,16 @@ const styles = StyleSheet.create({
         paddingTop: '2%'
     },
     viewInfor: {
-        flex: 1,
+        alignSelf: 'center',
         alignItems: 'center',
-        marginTop: 20
+        marginBottom: 10,
+        flexDirection: 'row'
     },
     imgCover: {
         borderRadius: 10,
 
         width: '100%',
-        height: '100%'
+        height: '80%'
     },
     imgAvarta: {
         borderRadius: 60,
@@ -56,20 +56,7 @@ const styles = StyleSheet.create({
         borderWidth: 3,
         alignSelf: 'center',
         marginTop: -70,
-        borderColor: '#242526'
-
-    },
-
-    primaryText: {
-        color: 'white',
-
-        fontSize: 20,
-        fontWeight: 'bold'
-    },
-    secondText: {
-        color: 'white',
-
-        fontSize: 13,
+        borderColor: AppColors.Background
 
     },
 }
