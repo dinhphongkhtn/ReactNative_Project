@@ -7,11 +7,11 @@ export default class HeroList extends Component {
     heroData = [...heroData]
 
     renderItem = ({item,index}) => {
-        console.log(item)
+        
         return (
-            <View style={{marginRight:20, flex:1}}>
+            <View style={[{flex:1}, this.props.horizontal ? {marginRight:25} : {}]}>
 
-                <Hero  heroData={item} displayMode={1} />
+                <Hero  heroData={item} displayMode={this.props.displayMode} />
             </View>
 
         )
@@ -19,10 +19,10 @@ export default class HeroList extends Component {
 
     render() {
         return (
-            <View style={{ flex: 1, marginHorizontal:10 }}>
+            <View style={{ flex: 1}}>
               
                 <FlatList 
-                    numColumns={4}
+                    horizontal={this.props.horizontal}
                     renderItem={this.renderItem}
                    data={this.heroData}
                    keyExtractor={item => item.Id}

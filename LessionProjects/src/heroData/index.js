@@ -24,7 +24,7 @@ const heroData = [
     },
     {
         Id:3,
-        Name:'Flah',
+        Name:'Flash',
         Avarta: flash,
     },
     {
