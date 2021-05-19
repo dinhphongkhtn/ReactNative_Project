@@ -5,20 +5,120 @@ import {
     TouchableOpacity
 } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
+import { connect } from 'react-redux';
 import { Bao, bgGame, Bua, Keo, Player, playerComputer } from '../assets/images'
 
 import { styles } from "../assets/Styles";
+import { playerChangeSelect } from '../Redux/Redux/actions/gameActions';
 import PlayerItem from './PlayerItem';
+import ResultContent from './ResultContent';
+import SelectContent from './SelectContent';
 
-export default class BaiTapOanTuXi extends Component {
+ class BaiTapOanTuXi extends Component {
 
     state = {
-        score: 0,
-        times: 9
+       
+       
+    }
+
+    arrayGames = [];
+
+    changePlayerChoose = (item) => {
+
+         this.props.dispatch(playerChangeSelect(item));
+    };
+
+    convertChooseToInt = (choose) => {
+        switch (choose) {
+            case Keo: return 1;
+            case Bua: return 2;
+            case Bao: return 3;
+            default: return -1;
+        }
+    }
+    resetGame = () => {
+        this.setState({ score: 0, times: 9 });
+        clearInterval();
+    }
+    changeTimes = (value) => {
+        this.setState({ times: this.state.times + value }, () => {
+            if (this.state.times === 0) {
+
+                // alert("Finished");
+            }
+        })
+    }
+
+    getResult = () => {
+        const { playerChoose, thanosChoose } = this.state;
+        let playerSelectId = playerChoose.Id;
+        // let playerSelectId = playerChoose.Id;
+        let winner = 'none';
+
+        if (playerChoose.Id === thanosChoose.Id) return winner;
+
+        if (playerChoose.Image === Keo) {
+
+            winner = thanosChoose.Image === Bao ? 'player' : 'thanos';
+        } else if (playerChoose.Image == Bua) {
+            winner = thanosChoose.Image === Keo ? 'player' : 'thanos';
+        }
+        else if (playerChoose.Image === Bao) {
+            winner = thanosChoose.Image === Bua ? 'player' : 'thanos';
+        }
+
+        return winner;
+    }
+
+    play = () => {
+
+        let playerChooseInt = this.state.playerChoose.Id;
+
+        if (playerChooseInt === -1) {
+            alert("Select your choose!");
+            return;
+        }
+
+        let rd = Math.floor(Math.random() * 3 + 1);
+        // let choose = -1;
+        // console.log(rd);
+        // switch (rd) {
+        //     case 1: choose = Keo; break;
+        //     case 2: choose = Bua; break;
+        //     case 3: choose = Bao; break;
+        // }
+        let _thanosChoose = this.state.commands.find(a => a.Id === rd);
+
+        this.setState({ thanosChoose: _thanosChoose }, () => {
+
+            let winner = this.getResult();
+
+            if (winner === 'none') return;
+            if (winner === 'player') {
+                this.setState({ score: this.state.score + 1 });
+            }
+            else if (winner === 'thanos') {
+
+                this.changeTimes(-1);
+            }
+        });
+
+    }
+
+    runPlay = (isStop) => {
+        let play;
+        play = setInterval(() => {
+            if (this.state.times > 0 && !isStop) {
+                this.play()
+            } else 
+            {
+                clearInterval(play);
+                this.resetGame();
+            }
+        }, 1000);
     }
 
     render() {
-
 
         return (
             <ImageBackground source={bgGame} style={styles.background}>
@@ -27,39 +127,19 @@ export default class BaiTapOanTuXi extends Component {
                     <SafeAreaView style={styles.container}>
                         <View style={styles.playerContent}>
 
-                            <PlayerItem imageGame={Keo} imagePlayer={Player}></PlayerItem>
-                            <PlayerItem imageGame={Bao} imagePlayer={playerComputer}></PlayerItem>
+                            <PlayerItem imageGame={this.props.playerChoose.Image} imagePlayer={Player}></PlayerItem>
+                            <PlayerItem imageGame={this.props.thanosChoose.Image} imagePlayer={playerComputer}></PlayerItem>
                         </View>
                         <View style={styles.selectConent}>
-                            <View style={styles.styleBorder}>
-                                <Image style={styles.smallimg} source={Keo}></Image>
-                            </View>
-                            <View style={styles.styleBorder}>
-                                <Image style={styles.smallimg} source={Bua}></Image>
-                            </View>
-                            <View style={styles.styleBorder}>
-                                <Image style={styles.smallimg} source={Bao}></Image>
-                            </View>
-                            {/* <Image style={styles.imgCommand} source={Bua}></Image>
-                            <Image style={styles.imgCommand} source={Bao}></Image> */}
+                            <SelectContent playerChoose={this.props.currentSelect}
+                                onPlaySelect={item => { this.changePlayerChoose(item) }}></SelectContent>
+
                         </View>
                         <View style={styles.inforContent}>
-                            <Text style={styles.scoretxt}>Score:{this.state.score}</Text>
-                            <Text style={styles.scoretxt}>Times:{this.state.times}</Text>
-                        </View>
-                        <View style={styles.buttonContent}>
-
-                            <TouchableOpacity style={[styles.button, { backgroundColor: '#ff9aff' }]}>
-                                <Text style={styles.buttonTxt}>Play</Text>
-                            </TouchableOpacity>
-                            <TouchableOpacity >
-                                <LinearGradient style={[styles.button]}
-                                    start={{ x: 0.5, y: 0 }} end={{ x: 1, y: 1 }}
-                                    colors={['#dfaf12', '#ffce35']} >
-                                    <Text style={styles.buttonTxt}>Reset</Text>
-                                </LinearGradient>
-                            </TouchableOpacity>
-
+                            <ResultContent
+                                onPlay={()=>{this.runPlay(false)}}
+                                onReset={()=>{this.runPlay(true)}}
+                                score={this.props.score} times={this.props.times}></ResultContent>
                         </View>
 
                     </SafeAreaView>
@@ -69,3 +149,15 @@ export default class BaiTapOanTuXi extends Component {
     }
 }
 
+const mapStateToProps = (state)=>{
+    return {
+        playerChoose : state.GameReducer.playerChoose,
+        thanosChoose:  state.GameReducer.thanosChoose,
+        currentSelect: state.GameReducer.currentSelect,
+        score: state.GameReducer.score,
+        times: state.GameReducer.times,
+    }
+}
+
+
+export default connect(mapStateToProps)(BaiTapOanTuXi);

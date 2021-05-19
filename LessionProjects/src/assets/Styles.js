@@ -83,7 +83,7 @@ export  const styles = StyleSheet.create({
     },
     styleBorder: {
         backgroundColor: 'rgba(0,0,0,0.5)',
-        borderColor: 'yellow',
+       
         borderWidth: 2,
         borderRadius: 6,
         padding: 3,
