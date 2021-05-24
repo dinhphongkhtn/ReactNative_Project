@@ -3,14 +3,11 @@ import { Text, View, TouchableOpacity, Image } from 'react-native'
 import { styles } from "../assets/Styles";
 import { Bao, bgGame, Bua, Keo, Player, playerComputer } from '../assets/images'
 import { connect } from 'react-redux';
+import { playerChangeSelect } from '../Redux/Redux/actions/gameActions';
 
  class SelectContent extends Component {
 
-    onPlaySelect = (item) => {
-        
-        this.props.onPlaySelect(item);
-    }
-    
+ 
 
     renderCommands= () =>{
         const {arrayGame,playerChoose} = this.props;
@@ -18,7 +15,7 @@ import { connect } from 'react-redux';
             
             return (
                 <TouchableOpacity key={index}
-                onPress={() => { this.onPlaySelect(item) }}
+                onPress={() => { this.props.onPlaySelect(item) }}
                 style={[styles.styleBorder, item.Id === playerChoose && {borderColor:'yellow'}]}>
                 <Image style={[styles.smallimg]} source={item.Image}></Image>
             </TouchableOpacity>
@@ -40,4 +37,7 @@ import { connect } from 'react-redux';
 const mapStateToProps = (state) =>({
     arrayGame : state.GameReducer.arrayGame
 })
-export default connect(mapStateToProps)(SelectContent);
+const mapDispathToProps = dispatch =>({
+    onPlaySelect: item=>dispatch(  playerChangeSelect(item))
+    })
+export default connect(mapStateToProps,mapDispathToProps)(SelectContent);
